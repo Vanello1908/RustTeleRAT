@@ -1,0 +1,11 @@
+[workspace]
+members = [ "camera", "config","main", "system", "info", "scrapper", "utils"]
+
+[profile.release]
+lto = true
+strip = true
+panic = "abort"
+codegen-units = 1
+opt-level = "s"
+
+
