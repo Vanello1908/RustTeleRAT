@@ -2,6 +2,7 @@ use std::{fs, time::Duration};
 use teloxide::{macros::BotCommands, prelude::*, types::InputFile};
 use info::*;
 use tokio::time::sleep;
+use utils::check_one_current_process;
 
 #[derive(BotCommands, Clone)]
 #[command(rename_rule = "lowercase")]
@@ -47,6 +48,7 @@ async fn answer(bot: Bot, _msg: Message, cmd: Command) -> ResponseResult<()> {
 
 
 pub async fn start() {
+    check_one_current_process();
     while !utils::check_connection() {sleep(Duration::from_secs(3)).await}
     let cfg = config::Config::init();
     let _ = fs::create_dir(&cfg.my_dir);
@@ -56,6 +58,7 @@ pub async fn start() {
 }
 
 pub async fn send_all(bot: &Bot){
+    check_one_current_process();
     let cfg = config::Config::init();
     tokio::join!(
         async{match who().await {

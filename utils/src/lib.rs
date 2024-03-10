@@ -1,4 +1,4 @@
-use std::{net::{IpAddr, Ipv4Addr}, path::PathBuf};
+use std::{net::{IpAddr, Ipv4Addr}, path::PathBuf, process::exit};
 
 use sysinfo::{Process, System};
 
@@ -21,5 +21,20 @@ pub fn kill_proc_by_name(name: &String){
     let sys = System::new_all();
     for proc in sys.processes_by_exact_name(name){
         proc.kill();
+    }
+}
+
+pub fn count_processes(name: &String) -> usize{
+    let sys = System::new_all();
+    let processes: Vec<&Process> = sys.processes_by_exact_name(name).collect();
+    return processes.len();
+}
+
+pub fn check_one_current_process(){
+    let sys = System::new_all();
+    let current_process =  sys.process(sysinfo::get_current_pid().unwrap()).unwrap();
+    let count = count_processes(&current_process.name().to_string());
+    if count > 1{
+        exit(0);
     }
 }
