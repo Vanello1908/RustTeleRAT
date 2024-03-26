@@ -1,5 +1,4 @@
 use std::path::PathBuf;
-
 use image::RgbaImage;
 
 pub fn capture_screen(path: &PathBuf) -> Result<(), &'static str>{

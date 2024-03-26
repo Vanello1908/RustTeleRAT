@@ -1,5 +1,5 @@
 use std::path::PathBuf;
-#[derive(Debug)]
+
 pub struct Config{
     pub local_path: PathBuf,
     pub my_dir: PathBuf,

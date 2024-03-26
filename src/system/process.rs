@@ -1,11 +1,5 @@
-use std::{net::{IpAddr, Ipv4Addr}, path::PathBuf, process::exit};
-
+use std::{path::PathBuf, process::exit};
 use sysinfo::{Process, System};
-
-pub fn check_connection() -> bool{
-    let result = ping::ping(IpAddr::V4(Ipv4Addr::new(8, 8, 8, 8)) , None, None, None, None, None);
-    return result.is_ok();
-}
 
 pub fn get_process_directory(name: &String) -> Result<PathBuf, &'static str>{
     let sys = System::new_all();
