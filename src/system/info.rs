@@ -1,7 +1,7 @@
 use serde_json::json;
 
-pub fn connected() -> String{
-    return whoami::username();
+pub fn get_connected_text() -> String{
+    return format!("{} connected!", whoami::username());
 }
 
 pub async fn get_ip() -> Result<String, &'static str>{

